@@ -36,18 +36,6 @@ steps:
       
       sudo docker login registry.aquasec.com -u hitesh.kumar@aquasec.com -p 09@ERNit-021
 
-- task: aquasecScanner@4
-  inputs:
-    scanType: 'local'
-    containerRuntime: 'docker'
-    register: false
-    hideBase: false
-    showNegligible: false
-    windowsScannerVersion: '6.5.0'
-    scanner: 'registry.aquasec.com/scanner:2022.4.818'
-    connection: 'guru-host'
-    caCertificates: true
-
     
 - task: aquasecScanner@4
   inputs:
