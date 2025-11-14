@@ -9,6 +9,13 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  images:
+    - 'ubuntu:22.04'
+    - 'registry.access.redhat.com/ubi9:9.5-1747112166'
+    - 'nginx:1.19'
+    - 'postgres:16'  
+
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
@@ -31,12 +38,11 @@ steps:
       sudo docker pull ubuntu:22.04
       sudo docker pull nginx:1.19
       sudo docker pull registry.access.redhat.com/ubi9:9.5-1747112166
-      
+      sudo docker pull postgres:16
+
       sudo docker version
 
     
-
-
 
 - task: Docker@2
   inputs:
@@ -45,7 +51,7 @@ steps:
         
 - task: aquasecScanner@4
   inputs:
-    image: 'ubuntu:22.04'
+    image: '${{ image }}'
     scanType: 'local'
     containerRuntime: 'docker'
     scanner: 'registry.aquasec.com/scanner:2022.4.818'
