@@ -24,6 +24,14 @@ steps:
       docker pull ${{ image }}
     displayName: "Pull image: ${{ image }}"
 
+
+- task: Docker@2
+  displayName: 'Docker login (service connection)'
+  inputs:
+    containerRegistry: 'login aqua'
+    command: 'login'
+
+    
 # --- Scan all images with Aqua scanner task (one task definition, expanded for each image) ---
 - ${{ each image in parameters.images }}:
   - task: aquasecScanner@4
