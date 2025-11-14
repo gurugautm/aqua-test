@@ -17,3 +17,33 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
   displayName: 'Run a multi-line script'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      # Write your commands here
+      
+      echo 'Hello world'
+      
+      sudo docker login https://registry.access.redhat.com -u gurugautm -p 09-ernit021
+      
+      sudo docker pull ubuntu:22.04
+      sudo docker pull nginx:1.19
+      sudo docker pull registry.access.redhat.com/ubi9:9.5-1747112166
+      
+      sudo docker version
+      
+      sudo docker login registry.aquasec.com -u hitesh.kumar@aquasec.com -p 09@ERNit-021
+
+- task: aquasecScanner@4
+  inputs:
+    scanType: 'local'
+    containerRuntime: 'docker'
+    register: false
+    hideBase: false
+    showNegligible: false
+    windowsScannerVersion: '6.5.0'
+    scanner: 'registry.aquasec.com/scanner:2022.4.818'
+    connection: 'guru-host'
+    caCertificates: true
