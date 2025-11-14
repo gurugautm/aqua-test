@@ -12,38 +12,26 @@ parameters:
   default:
     - 'ubuntu:22.04'
     - 'nginx:latest'
-    - 'registry.access.redhat.com/ubi9:9.5-1747112166'
     - 'nginx:1.19'
     - 'postgres:16'
-
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+# --- Pull all images (expanded at compile-time; no manual repetition) ---
+- ${{ each image in parameters.images }}:
+  - script: |
+      set -e
+      echo "Pulling ${{ image }}"
+      docker pull ${{ image }}
+    displayName: "Pull image: ${{ image }}"
 
-# (Optional) Docker Hub / other registries login via service connection
-# Replace 'login aqua' with your Docker service connection name for Docker Hub
-- task: Docker@2
-  displayName: 'Docker login (service connection)'
-  inputs:
-    containerRegistry: 'login aqua'
-    command: 'login'
-
-# If you also need to auth to Red Hat registry, use a separate Docker@2 service connection
-# and remove any inline passwords from scripts.
-
-# Loop over the images parameter and run the Aqua task per image
+# --- Scan all images with Aqua scanner task (one task definition, expanded for each image) ---
 - ${{ each image in parameters.images }}:
   - task: aquasecScanner@4
-    displayName: 'Aqua scan: ${{ image }}'
+    displayName: "Aqua scan: ${{ image }}"
     inputs:
       image: '${{ image }}'
       scanType: 'local'
       containerRuntime: 'docker'
       scanner: 'registry.aquasec.com/scanner:2022.4.818'
-      connection: 'guru-host'
+      connection: 'guru-host'     # Aqua Console connection
       caCertificates: true
