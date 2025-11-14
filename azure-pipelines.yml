@@ -47,3 +47,17 @@ steps:
     scanner: 'registry.aquasec.com/scanner:2022.4.818'
     connection: 'guru-host'
     caCertificates: true
+
+    
+- task: aquasecScanner@4
+  inputs:
+    image: 'ubuntu:22.04'
+    scanType: 'local'
+    containerRuntime: 'docker'
+    register: false
+    hideBase: false
+    showNegligible: false
+    windowsScannerVersion: '6.5.0'
+    scanner: 'registry.aquasec.com/scanner:818'
+    connection: 'guru-host'
+    caCertificates: true
