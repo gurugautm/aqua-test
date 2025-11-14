@@ -48,6 +48,6 @@ steps:
     image: 'ubuntu:22.04'
     scanType: 'local'
     containerRuntime: 'docker'
-    scanner: 'registry.aquasec.com/scanner:818'
+    scanner: 'registry.aquasec.com/scanner:2022.4.818'
     connection: 'guru-host'
     caCertificates: true
