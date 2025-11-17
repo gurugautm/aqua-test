@@ -3,7 +3,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: new-1
 
 # Use parameters (objects/lists are allowed here)
 parameters:
