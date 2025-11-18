@@ -10,11 +10,20 @@ parameters:
 - name: images
   type: object
   default:
-    - 'ubuntu:22.04'
-    - 'nginx:latest'
-    - 'nginx:1.19'
-    - 'postgres:16'
+    - 'ubi9:9.5-1747112166'
+    - 'ubi9:9.6-1753769805'
+    - 'ubi9:9.6-1753978585-source'
+    - 'ubi9:9.5-1742918310'
+    - 'ubi9:9.5-1731517889-source'
+
+
+
 steps:
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'redhat'
+    command: 'login'
 
 # --- Pull all images (expanded at compile-time; no manual repetition) ---
 - ${{ each image in parameters.images }}:
