@@ -45,12 +45,15 @@ steps:
     
 # --- Scan all images with Aqua scanner task (one task definition, expanded for each image) ---
 - ${{ each image in parameters.images }}:
+
+
+
   - task: aquasecScanner@4
     displayName: "Aqua scan: ${{ image }}"
     inputs:
       image: '${{ image }}'
       scanType: 'local'
       containerRuntime: 'docker'
-      scanner: 'registry.aquasec.com/scanner:2022.4.818'
-      connection: 'guru-host'     # Aqua Console connection
-      caCertificates: true
+      scanner: 'registry.aquasec.com/scanner:2507.4.25'
+      connection: 'asia cloud'
+      
