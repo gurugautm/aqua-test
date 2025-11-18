@@ -1,0 +1,56 @@
+# azure-pipelines.yml
+trigger:
+- master
+
+pool:
+  name: new-1
+  demands:
+  - Agent.Name -equals agent-2
+
+# Use parameters (objects/lists are allowed here)
+parameters:
+- name: images
+  type: object
+  default:
+    - 'registry.access.redhat.com/ubi9:9.5-1747112166'
+    - 'registry.access.redhat.com/ubi9:9.6-1753769805'
+    - 'registry.access.redhat.com/ubi9:9.6-1753978585'
+    - 'registry.access.redhat.com/ubi9:9.5-1742918310'
+    - 'registry.access.redhat.com/ubi9:9.5-1731517889'
+
+
+
+steps:
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'redhat'
+    command: 'login'
+
+# --- Pull all images (expanded at compile-time; no manual repetition) ---
+- ${{ each image in parameters.images }}:
+  - script: |
+      set -e
+      echo "Pulling ${{ image }}"
+      docker pull ${{ image }}
+    displayName: "Pull image: ${{ image }}"
+
+
+- task: Docker@2
+  displayName: 'Docker login (service connection)'
+  inputs:
+    containerRegistry: 'login aqua'
+    command: 'login'
+
+    
+# --- Scan all images with Aqua scanner task (one task definition, expanded for each image) ---
+- ${{ each image in parameters.images }}:
+  - task: aquasecScanner@4
+    displayName: "Aqua scan: ${{ image }}"
+    inputs:
+      image: '${{ image }}'
+      scanType: 'local'
+      containerRuntime: 'docker'
+      scanner: 'registry.aquasec.com/scanner:2022.4.818'
+      connection: 'guru-host'     # Aqua Console connection
+      caCertificates: true
