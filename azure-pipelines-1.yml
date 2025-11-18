@@ -4,6 +4,8 @@ trigger:
 
 pool:
   name: new-1
+  demands:
+  - Agent.Name -equals agent-2
 
 # Use parameters (objects/lists are allowed here)
 parameters:
